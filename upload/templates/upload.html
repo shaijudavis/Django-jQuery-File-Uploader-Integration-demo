@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-
     <!--
 
     Looking at the source code, like a basass. Way to go!
@@ -43,7 +42,7 @@
     <script type="text/javascript">
         $(function() {
             'use strict';
-
+			var list_files = "{{ data }}"
             // Initialize the jQuery File Upload widget
             // For a complete option reference go to
             // https://github.com/blueimp/jQuery-File-Upload
@@ -101,7 +100,19 @@
         </div>
     </form>
     <div class="fileupload-content">
-        <table class="files"></table>
+        <table class="files">
+{% for list in data %}        	
+        	<tr class="template-download" style="">
+				<td class="preview">                      </td>
+				<td class="name">             <a href="">{{ list.filename }}</a>         </td>
+				<td class="size">{{ list.size }}</td>
+				<td colspan="2"></td>
+				<td class="delete">
+				<button data-url="/upload/?f=b700d329-cb2d-461c-a235-1890681f97f4%2Fa3823fc8-0850-46c1-b301-6a7b41c5e48aAdmin_Screenshot.png" data-type="POST" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only" role="button" title="Delete"><span class="ui-button-icon-primary ui-icon ui-icon-trash"></span><span class="ui-button-text">Delete</span></button>
+				</td>
+		</tr>
+{% endfor %}		
+        </table>
         <div class="fileupload-progressbar"></div>
     </div>
 </div>

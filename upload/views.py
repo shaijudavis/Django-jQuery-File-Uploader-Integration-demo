@@ -13,6 +13,8 @@ from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseRedire
 # for os manipulations
 import os
 
+from upload.models import Image
+from django.shortcuts import get_object_or_404 
 
 def Upload(request):
     """
@@ -95,7 +97,7 @@ def Upload(request):
 
             # update the temporary path by creating a sub-folder within
             # the upload folder with the uid name
-            temp_path = os.path.join(temp_path, uid)
+            #temp_path = os.path.join(temp_path, uid)
 
             # get the uploaded file
             file = request.FILES[u'files[]']
@@ -152,6 +154,8 @@ def Upload(request):
                 destination.write(chunk)
                 # close the file
             destination.close()
+            img = Image(filename=(str(uuid.uuid4()) + '-' + file.name), size = file.size)
+            img.save()
 
             # here you can add the file to a database,
             #                           move it around,
@@ -216,10 +220,13 @@ def Upload(request):
 
     else: #GET
         # load the template
+        upload_data = Image.objects.all()
         t = loader.get_template("upload.html")
         c = Context({
             # the unique id which will be used to get the folder path
             "uid": uuid.uuid4(),
+            #data from upload_image database
+            "data":upload_data,
             # these two are necessary to generate the jQuery templates
             # they have to be included here since they conflict with django template system
             "open_tv": u'{{',
