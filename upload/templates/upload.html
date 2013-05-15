@@ -1,10 +1,12 @@
 {% extends "base.html" %}
-{% block base_content %}
+{% block title %}::Jquery Upload{% endblock %}
+{% block css %}
     <!-- Some CSS for the jQuery uploader UI -->
     <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/themes/base/jquery-ui.css"
           id="theme">
     <link href="/static/css/jquery.fileupload-ui.css" rel="stylesheet">
-
+{% endblock %}
+{% block js %}
     <!-- jQuery Javascript -->
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.14/jquery-ui.min.js"></script>
@@ -18,8 +20,7 @@
     <script src="/static/js/jquery.iframe-transport.js"></script>
     <script src="/static/js/jquery.fileupload.js"></script>
     <script src="/static/js/jquery.fileupload-ui.js"></script>
-    
-    <script type="text/javascript">
+        <script type="text/javascript">
         $(function() {
             'use strict';
 			var list_files = "{{ data }}"
@@ -60,9 +61,8 @@
 
         });
     </script>
-
-
-
+{% endblock %}
+{% block base_content %}
 <div id="fileupload">
     <form action="{% url 'upload.views.Upload' %}" method="POST" enctype="multipart/form-data">
         {% csrf_token %}
