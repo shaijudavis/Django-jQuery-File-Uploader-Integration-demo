@@ -1,24 +1,5 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <!--
-
-    Looking at the source code, like a basass. Way to go!
-    This is a html page from demo implementation of jQuery Uploader
-    with Django >= 1.2.5 still enabled.
-
-    Here you can find more information and download the whole source code:
-    https://github.com/miki725/Django-jQuery-File-Uploader-Integration-demo
-    and here you can find the wiki with even more info:
-    https://github.com/miki725/Django-jQuery-File-Uploader-Integration-demo/wiki
-
-    Thanks for looking.
-
-    -->
-
-    <meta charset="UTF-8">
-    <title>Demo Implementation of jQuery Uploader</title>
-
+{% extends "base.html" %}
+{% block base_content %}
     <!-- Some CSS for the jQuery uploader UI -->
     <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/themes/base/jquery-ui.css"
           id="theme">
@@ -37,8 +18,7 @@
     <script src="/static/js/jquery.iframe-transport.js"></script>
     <script src="/static/js/jquery.fileupload.js"></script>
     <script src="/static/js/jquery.fileupload-ui.js"></script>
-
-
+    
     <script type="text/javascript">
         $(function() {
             'use strict';
@@ -81,9 +61,6 @@
         });
     </script>
 
-</head>
-
-<body>
 
 
 <div id="fileupload">
@@ -108,7 +85,7 @@
 				<td class="size">{{ list.size }}</td>
 				<td colspan="2"></td>
 				<td class="delete">
-				<button data-url="/upload/?f=b700d329-cb2d-461c-a235-1890681f97f4%2Fa3823fc8-0850-46c1-b301-6a7b41c5e48aAdmin_Screenshot.png" data-type="POST" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only" role="button" title="Delete"><span class="ui-button-icon-primary ui-icon ui-icon-trash"></span><span class="ui-button-text">Delete</span></button>
+				<button data-url="/upload/?f={{ list.filename }}" data-type="POST" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only" role="button" title="Delete"><span class="ui-button-icon-primary ui-icon ui-icon-trash"></span><span class="ui-button-text">Delete</span></button>
 				</td>
 		</tr>
 {% endfor %}		
@@ -185,9 +162,5 @@
         </td>
     </tr>
 </script>
-
-
-</body>
-
-
+{% endblock %}
 </html>
