@@ -62,8 +62,7 @@ def Upload(request):
         # the file types which are going to be allowed for upload
         #   must be a mimetype
         "acceptedformats": (
-            "image/jpeg",
-            "image/png",
+            "application/pdf",
             )
     }
 
@@ -94,7 +93,10 @@ def Upload(request):
                 return HttpResponseBadRequest("UID not specified.")
                 # if here, uid has been specified, so record it
             uid = request.POST[u"uid"]
-
+            
+            #unique id to avoide overwriting pdf with same name
+            uniq_id = str(uuid.uuid4())
+            
             # update the temporary path by creating a sub-folder within
             # the upload folder with the uid name
             #temp_path = os.path.join(temp_path, uid)
@@ -121,7 +123,7 @@ def Upload(request):
 
             # the response data which will be returned to the uploader as json
             response_data = {
-                "name": file.name,
+                "name": uniq_id + '-' + file.name,
                 "size": file.size,
                 "type": file.content_type
             }
@@ -144,7 +146,8 @@ def Upload(request):
             # get the absolute path of where the uploaded file will be saved
             # all add some random data to the filename in order to avoid conflicts
             # when user tries to upload two files with same filename
-            filename = os.path.join(temp_path, str(uuid.uuid4()) + file.name)
+            
+            filename = os.path.join(temp_path, uniq_id + '-' + file.name)
             # open the file handler with write binary mode
             destination = open(filename, "wb+")
             # save file data into the disk
@@ -154,7 +157,7 @@ def Upload(request):
                 destination.write(chunk)
                 # close the file
             destination.close()
-            img = Image(filename=(str(uuid.uuid4()) + '-' + file.name), size = file.size)
+            img = Image(filename=(uniq_id + '-' + file.name), size = file.size)
             img.save()
 
             # here you can add the file to a database,
@@ -170,7 +173,7 @@ def Upload(request):
 
             # url for deleting the file in case user decides to delete it
             response_data["delete_url"] = request.path + "?" + urllib.urlencode(
-                    {"f": uid + "/" + os.path.split(filename)[1]})
+                    {"f": uniq_id + '-' + file.name})
             # specify the delete type - must be POST for csrf
             response_data["delete_type"] = "POST"
 
@@ -195,19 +198,24 @@ def Upload(request):
             return HttpResponse(response_data, mimetype=response_type)
 
         else: # file has to be deleted
-
+            temp_path = os.path.join(settings.PROJECT_ROOT, "tmp")
             # get the file path by getting it from the query (e.g. '?f=filename.here')
             filepath = os.path.join(temp_path, request.GET["f"])
 
             # make sure file exists
             # if not return error
+            print filepath
             if not os.path.isfile(filepath):
-                return HttpResponseBadRequest("File does not exist")
+                return HttpResponseBadRequest(filepath+"--File does not exist")
 
             # delete the file
             # this step might not be a secure method so extra
             # security precautions might have to be taken
             os.remove(filepath)
+            
+            #to remove entry from image database
+            d = Image.objects.get(filename=request.GET["f"])
+            d.delete()
 
             # generate true json result
             # in this case is it a json True value
