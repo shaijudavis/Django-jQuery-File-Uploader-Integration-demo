@@ -229,8 +229,25 @@ def Upload(request):
     else: #GET
         # load the template
         upload_data = Image.objects.all()
-        t = loader.get_template("upload.html")
-        c = Context({
+#        t = loader.get_template("upload.html")
+#        c = Context({
+            # the unique id which will be used to get the folder path
+#            "uid": uuid.uuid4(),
+            #data from upload_image database
+#            "data":upload_data,
+            # these two are necessary to generate the jQuery templates
+            # they have to be included here since they conflict with django template system
+#            "open_tv": u'{{',
+#            "close_tv": u'}}',
+            # some of the parameters to be checked by javascript
+#            "maxfilesize": options["maxfilesize"],
+#            "minfilesize": options["minfilesize"],
+#            })
+        # add csrf token value to the dictionary
+#        c.update(csrf(request))
+        # return
+        #return HttpResponse(t.render(c))
+        return render_to_response("upload.html",{
             # the unique id which will be used to get the folder path
             "uid": uuid.uuid4(),
             #data from upload_image database
@@ -242,9 +259,6 @@ def Upload(request):
             # some of the parameters to be checked by javascript
             "maxfilesize": options["maxfilesize"],
             "minfilesize": options["minfilesize"],
-            })
-        # add csrf token value to the dictionary
-        c.update(csrf(request))
-        # return
-        return HttpResponse(t.render(c))
+            }, RequestContext(request),
+        )
 
