@@ -5,7 +5,7 @@ from django.conf import settings
 # for generating json
 from django.utils import simplejson
 # for loading template
-from django.template import Context, loader
+from django.template import Context, loader, RequestContext
 # for csrf
 from django.core.context_processors import csrf
 # for HTTP response
