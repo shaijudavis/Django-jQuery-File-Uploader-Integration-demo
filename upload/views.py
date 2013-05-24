@@ -14,7 +14,7 @@ from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseRedire
 import os
 
 from upload.models import Image
-from django.shortcuts import get_object_or_404 
+from django.shortcuts import get_object_or_404, render_to_response
 
 def Upload(request):
     """
